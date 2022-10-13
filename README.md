@@ -1,2 +1,6 @@
-# DAI_UGR_Practicas
-Repositorio donde se desarrollan las prácticas de DAI 2022/2023
+# Prácticas de Desarrollo de Aplicaciones para Internet
+## Curso 2022 - 2023
+### Francisco Javier Gallardo Molina
+
+Prácticas desarrolladas durante el curso 2022/2023
+
