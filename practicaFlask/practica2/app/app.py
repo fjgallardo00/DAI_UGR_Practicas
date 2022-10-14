@@ -4,15 +4,100 @@ from bson.json_util import dumps
 from pymongo import MongoClient
 
 from flask import Flask, Response, request, jsonify
+from flask_restful import reqparse, abort, Api, Resource
+
 from bson import ObjectId
 
 app = Flask(__name__)
+api = Api(app)
 
 # Conectar al servicio (docker) "mongo" en su puerto estandar
 client = MongoClient("mongo", 27017)
 
 # Base de datos
 db = client.cockteles
+
+class API2(Resource):
+    def get(self):
+        
+        parametro = request.args.get('con')
+        if parametro:
+
+            lista = []
+            try:
+                buscados = db.recipes.find({"ingredients.name":parametro}).sort('name')
+            except:
+                return "<html><h1>ERROR</h1></html>"
+            for recipe in buscados:
+                recipe['_id'] = str(recipe['_id']) # casting a string (es un ObjectId)
+                lista.append(recipe)
+            return jsonify(lista)
+
+        else:
+
+            lista = []
+            try:
+                buscados = db.recipes.find().sort('name')
+            except:
+                return "<html><h1>ERROR</h1></html>"
+            
+            for recipe in buscados:
+                recipe['_id'] = str(recipe['_id']) # casting a string (es un ObjectId)
+                lista.append(recipe)
+            return jsonify(lista)
+        
+    def post(self):
+        receta = request.get_json()
+        try:
+            db.recipes.insert_one(receta)
+        except:
+            return "<html><h1>ERROR</h1></html>"
+        return dumps(receta)
+    
+api.add_resource(API2, '/api2/recipes')
+
+class API2_ID(Resource):
+    def get(self, id):
+        try:
+            buscado = db.recipes.find_one({'_id':ObjectId(id)})
+        except:
+            return "<html><h1>ERROR</h1></html>"
+        if buscado:
+            buscado['_id'] = str(buscado['_id']) # casting a string (es un ObjectId)
+            return jsonify(buscado)
+        else:
+            return jsonify({'error':'Not found'}), 404
+
+    def delete(self, id):
+        try:
+            buscado = db.recipes.find_one({'_id':ObjectId(id)})
+        except:
+            return "<html><h1>ERROR</h1></html>"
+        if buscado:
+            buscado['_id'] = str(buscado['_id'])
+            db.recipes.delete_one({'_id':ObjectId(id)})
+            return jsonify(buscado)
+        else:
+            return jsonify({'error':'Not found'}), 404
+
+    def put(self, id):
+        try:
+            buscado = db.recipes.find_one({'_id':ObjectId(id)})
+        except:
+            return "<html><h1>ERROR</h1></html>"
+        if buscado:
+            receta = request.get_json()
+            db.recipes.update_one({'_id':ObjectId(id)},{'$set':receta})
+            try:
+                buscado = db.recipes.find_one({'_id':ObjectId(id)})
+            except:
+                return "<html><h1>ERROR</h1></html>"
+            buscado['_id'] = str(buscado['_id'])
+            return jsonify(buscado)
+        else:
+            return jsonify({'error':'Not found'}), 404
+
+api.add_resource(API2_ID, '/api2/recipes/<id>')
 
 @app.route('/')
 def hola():
@@ -25,7 +110,10 @@ def api_1():
         if parametro:
 
             lista = []
-            buscados = db.recipes.find({"ingredients.name":parametro}).sort('name')
+            try:
+                buscados = db.recipes.find({"ingredients.name":parametro}).sort('name')
+            except:
+                return "<html><h1>ERROR</h1></html>"
             for recipe in buscados:
                 recipe['_id'] = str(recipe['_id']) # casting a string (es un ObjectId)
                 lista.append(recipe)
@@ -34,7 +122,11 @@ def api_1():
         else:
 
             lista = []
-            buscados = db.recipes.find().sort('name')
+            try:
+                buscados = db.recipes.find().sort('name')
+            except:
+                return "<html><h1>ERROR</h1></html>"
+            
             for recipe in buscados:
                 recipe['_id'] = str(recipe['_id']) # casting a string (es un ObjectId)
                 lista.append(recipe)
@@ -42,16 +134,22 @@ def api_1():
 
     if request.method == 'POST':
         receta = request.get_json()
-        db.recipes.insert_one(receta)
+        try:
+            db.recipes.insert_one(receta)
+        except:
+            return "<html><h1>ERROR</h1></html>"
+        
         return dumps(receta)
 
 # para devolver una, modificar o borrar
 @app.route('/api/recipes/<id>', methods=['GET', 'PUT', 'DELETE'])
 def api_2(id):
     
-
-    # try except
-    buscado = db.recipes.find_one({'_id':ObjectId(id)})
+    try:
+        buscado = db.recipes.find_one({'_id':ObjectId(id)})
+    except:
+        return "<html><h1>ERROR</h1></html>"
+    
     if buscado:
         buscado['_id'] = str(buscado['_id'])
         if request.method == 'GET':
