@@ -1,0 +1,7 @@
+version: '3.3'
+services:
+  contenedor:
+    image: python:3.8-alpine
+    volumes:
+      - ./ejercicios:/ejercicios
+    working_dir: /ejercicios

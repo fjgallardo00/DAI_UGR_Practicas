@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <style>
+        .d-flex{
+        gap:20px;
+        }
+    </style>
+
+    <div class="d-flex justify-center ">
+    
+    {% if recetas %}
+
+        {% for receta in recetas %}
+
+        <section class="d-flex justify-content-center flex-column">
+            <h2>{{receta.nombre}}</h2>
+            <img src="/{{receta.foto}}" weidth="300" height="300">
+        </section>
+        <section class="d-flex justify-content-center flex-column margin">
+            {{receta.preparación}}
+        </section>
+
+        {% endfor %}
+        
+    {% else %}
+        <h1>ERROR</h1>
+    {% endif %}
+    
+    </div>
+
+{% endblock %}

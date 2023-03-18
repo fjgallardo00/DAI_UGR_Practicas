@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+    {% if user.is_authenticated %}
+
+        {% if "recetas.add_receta" in user.get_group_permissions  %}
+            <form action="{% url 'add_receta' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form | crispy }}
+                
+                <br>
+                <div class="form-group">
+                    <button class="btn btn-primary" type="submit">Añadir receta</button>
+                </div>
+            </form>
+        {% else %}    
+            <h2>No tienes permiso para hacer esto</h2>
+            <a class="navbar-brand" href="{% url 'index' %}">Volver a inicio</a>
+        {% endif %}
+
+    {% else %}
+
+        <h2>No has iniciado sesión</h2>
+        <a class="nav-link active" aria-current="page" href="{% url 'login' %}">Iniciar sesión ahora</a>
+    
+    {% endif %}
+
+{% endblock %}
