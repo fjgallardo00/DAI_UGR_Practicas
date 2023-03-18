@@ -10,3 +10,4 @@ Prácticas desarrolladas durante el curso 2022/2023
 * [Práctica 1 - Microframework Flask](https://github.com/fjgallardo00/DAI_UGR_Practicas/tree/main/practicaFlask/practica1)
 * [Práctica 2 - Bases de datos NoSQL. API REST](https://github.com/fjgallardo00/DAI_UGR_Practicas/tree/main/practicaFlask/practica2)
 * [Práctica 3 - Django. Plantillas framework. Formularios CRUD. Autentificacion](https://github.com/fjgallardo00/DAI_UGR_Practicas/tree/main/practicaDjango/practica3)
+* [Práctica 4 - Front-end Flask](https://github.com/fjgallardo00/DAI_UGR_Practicas/tree/main/practicaFlask/practica2)
