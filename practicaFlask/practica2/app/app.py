@@ -3,7 +3,7 @@
 from bson.json_util import dumps
 from pymongo import MongoClient
 
-from flask import Flask, Response, request, jsonify
+from flask import Flask, Response, request, jsonify, render_template
 from flask_restful import reqparse, abort, Api, Resource
 
 from bson import ObjectId
@@ -101,7 +101,7 @@ api.add_resource(API2_ID, '/api2/recipes/<id>')
 
 @app.route('/')
 def hola():
-    return "<html><h1>HOLA</h1></html>"
+    return render_template('index.html')
 
 @app.route('/api/recipes', methods=['GET', 'POST'])
 def api_1():
