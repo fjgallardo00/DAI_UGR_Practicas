@@ -19,7 +19,7 @@ get_con:
 	http GET $(API)?con=Vodka
 	
 get_id:
-	http GET $(API)/634951f411e690f9b54a3ee6
+	http GET $(API)/5f7daa168ec9dfb536781b0b
 
 get_all2: get2 get_con2 get_id2
 
@@ -33,7 +33,7 @@ get_id2:
 	http GET $(API2)/634951f411e690f9b54a3ee6
 
 post:
-	http POST $(API) name="Bebida prueba" slug="bebida-prueba" instructions:='["Instrucciones de prueba22"]' ingredients:='[{"name": "Scotch", "quantity": { "quantity":"1", "unit":"oz"}}]' 
+	http POST $(API) name="1Bebida prueba" slug="bebida-prueba" instructions:='["Instrucciones de prueba22"]' ingredients:='[{"name": "Scotch", "quantity": { "quantity":"1", "unit":"oz"}}]' 
 
 post2:
 	http POST $(API2) name="Bebida prueba" slug="bebida-prueba" instructions:='["Instrucciones de prueba22"]' ingredients:='[{"name": "Scotch", "quantity": { "quantity":"1", "unit":"oz"}}]' 
