@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Foto</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Enlace</th>
+                    <th scope="col">Acciones</th>
+                    <th scope="col"></th>
+                    <th scope="col">
+                        <form action="{% url 'formulario' id=0 %}" class="d-flex" method="POST">
+                            {% csrf_token %}
+                            <button class="btn btn-outline-success" type="submit" name="add_receta" value="add_receta">Añadir receta</button>
+                        </form>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for receta in recetas %}
+                <tr>
+                    <th scope="row">{{receta.id}}</th>
+                    <td scope="row"><img src="{{receta.foto}}" weidth="100" height="100"></td>
+                    <td scope="row">{{receta.nombre}}</td>
+                    <td scope="row"><a href="{% url 'mostrar_receta' id=receta.id %}">Enlace a la receta</a></td>
+                    <td scope="row">
+                        <form action="{% url 'formulario' id=receta.id %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary">Editar</button>
+                        </form>
+                    </td>
+                    <td scope="row">
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ventanaModal-{{receta.id}}">
+                            Eliminar
+                        </button>
+                        
+                        <!-- Modal -->
+                        <div class="modal fade" id="ventanaModal-{{receta.id}}" tabindex="-1" aria-labelledby="ventanaModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="ventanaModalLabel">Eliminar receta</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    
+
+                                    {% if user.is_authenticated %}
+
+                                        {% if "recetas.delete_receta" in user.get_group_permissions %}
+                                            <p>¿Estás seguro de eliminar la receta?</p>
+                                        {% else %}    
+                                            <p>No tienes permiso para hacer esto</p>
+                                        {% endif %}
+
+                                    {% else %}
+
+                                        <p>No has iniciado sesión</p>
+                                    
+                                    {% endif %}
+
+                                </div>
+                                <div class="modal-footer">
+                                    
+                                    {% if user.is_authenticated %}
+
+                                        {% if "recetas.delete_receta" in user.get_group_permissions  %}
+                                            <form action="{% url 'eliminar_receta' %}/{{receta.id}}">
+                                                <button type="submit" class="btn btn-primary">Eliminar</button>
+                                            </form>
+                                        {% endif %}
+
+                                    {% else %}
+
+                                        <a class="btn btn-primary" aria-current="page" href="{% url 'login' %}">Iniciar sesión ahora</a>
+                                    
+                                    {% endif %}
+
+                                    
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td scope="row"></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    
+{% endblock %}
